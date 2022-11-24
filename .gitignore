@@ -130,3 +130,4 @@ dmypy.json
 
 # test dags
 simple_dag.py
+cmd.sh
