@@ -1,29 +1,37 @@
 from datetime import datetime
 from airflow.models import DAG
-from airflow.operators.dummy_operator import DummyOperator
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators import DummyOperator
+from airflow.contrib.operators import gcs_to_bq
 
 dag = DAG(
-    dag_id='{{ dag_id }}',
+    dag_id='{{ config_data['dag_name'] }}',
     schedule_interval='@once',
     start_date=datetime(2020, 1, 1)
 )
 
 with dag:
-    dummy = DummyOperator(
-        task_id='test',
+    start = DummyOperator(
+        task_id='start',
         dag=dag
     )
-{%- for n in range(num_task) %}
-    op_{{ loop.index }} = PythonOperator(
-        task_id='python_op_{{ loop.index }}',
-        dag=dag
-    )
-{%- endfor %}
+
 
 {%- set item = namespace(value='') %}
-{%- for n in range(num_task) %}
-{%-    set item.value = item.value + ' >> op_' + (n+1)|string %}
-{%- endfor %}
 
-    dummy {{ item.value }}
+
+    
+
+
+{%- for n in range(config_data['tasks']|length) %}
+{%-    if config_data['tasks'][n]['task_type'] == 'gcs_to_bigquery' %}
+    {{ config_data['tasks'][n]['task_id'] }} = gcs_to_bq.GoogleCloudStorageToBigQueryOperator(
+         bucket='{{ config_data['tasks'][n]['bucket'] }}',
+         source_objects={{ config_data['tasks'][n]['source_objects'] }},
+         destination_project_dataset_table='{{ config_data['tasks'][n]['destination_project_dataset_table'] }}',
+         write_disposition='{{ config_data['tasks'][n]['write_disposition'] }}',
+         dag=dag)
+{%-    set item.value = item.value + ' >> ' + config_data['tasks'][n]['task_id'] %}
+{%- endif %}
+{%- endfor %}
+    start {{ item.value }}
+

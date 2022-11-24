@@ -1,0 +1,26 @@
+{
+    "generated_file_name":"simple_dag.py",
+    "dag_name":"process_batch_data",
+    
+    "tasks":[
+        {
+            "task_type": "gcs_to_bigquery",
+            "task_id": "load_data",
+            "bucket":"anand-bq-test-2",
+            "source_objects":["/HCA_TEST/HCA_Test.csv"],
+            "destination_project_dataset_table": "anand-bq-test-2.hca_test.TextTable",
+            "autodetect":"True",
+            "write_disposition":"WRITE_TRUNCATE"
+        },
+        {
+            "task_type": "gcs_to_bigquery",
+            "task_id": "load_data2",
+            "bucket":"anand-bq-test-2-2",
+            "source_objects":["/HCA_TEST/HCA_Test.csv"],
+            "destination_project_dataset_table": "anand-bq-test-2.hca_test.TextTable",
+            "autodetect":"True",
+            "write_disposition":"WRITE_TRUNCATE"
+        }
+    ]
+    
+}
