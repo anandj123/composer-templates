@@ -8,7 +8,7 @@ config_data = json.load(f)
 file_dir = os.path.dirname(os.path.abspath(__file__))
 env = Environment(loader=FileSystemLoader(file_dir))
 
-template = env.get_template('dag.template')
+template = env.get_template('simple_dag.template')
 
 # I don't know what the configuration format but as long as you can convert to a dictionary, it can work.
 values = {}
