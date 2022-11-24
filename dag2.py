@@ -18,13 +18,5 @@ with dag:
         task_id='python_op_1',
         dag=dag
     )
-    op_2 = PythonOperator(
-        task_id='python_op_2',
-        dag=dag
-    )
-    op_3 = PythonOperator(
-        task_id='python_op_3',
-        dag=dag
-    )
 
-op_1 >> op_2 >> op_3
+    dummy  >> op_1

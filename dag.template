@@ -23,10 +23,7 @@ with dag:
 
 {%- set item = namespace(value='') %}
 {%- for n in range(num_task) %}
-{%-     if (n>0) %}
-{%-        set item.value = item.value + ' >> ' %}
-{%-     endif %}
-{%-     set item.value = item.value + 'op_' + (n+1)|string %}
+{%-    set item.value = item.value + ' >> op_' + (n+1)|string %}
 {%- endfor %}
 
-{{ item.value }}
+    dummy {{ item.value }}

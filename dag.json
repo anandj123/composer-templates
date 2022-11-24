@@ -1,5 +1,5 @@
 {
     "generated_file_name":"dag2.py",
     "dag_name":"my_dag2",
-    "number_of_tasks":3
+    "number_of_tasks":1
 }
