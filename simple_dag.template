@@ -19,7 +19,7 @@ with dag:
     )
 
 
-{%- set item = namespace(value='') %}
+{%- set item = namespace(value='start') %}
 
 {%- for n in range(config_data['tasks']|length) %}
 
@@ -51,4 +51,5 @@ with dag:
 {%- endif %}
 
 {%- endfor %}
-    start {{ item.value }}
+
+    {{ item.value }}
