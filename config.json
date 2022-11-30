@@ -21,6 +21,5 @@
             "task_type": "bigquery_stored_procedure",
             "stored_procedure_name":"Anand_BQ_Test_1.GetJobHash('a')"
         }
-    ]
-    
+    ]   
 }
