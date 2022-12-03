@@ -8,7 +8,7 @@ python3 -m pip install -r requirements.txt
 
 # Configuration file
 
-```json
+```yaml
 ---
 dag_name: simple_dag
 schedule_interval: 0 0 0 * *
