@@ -8,7 +8,7 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.models import Variable
 from airflow.operators.python_operator import PythonOperator
 from airflow.exceptions import AirflowSkipException
-
+from airflow.providers.google.cloud.sensors.gcs import GCSObjectsWithPrefixExistenceSensor
 
 dag = DAG(
     dag_id='{{ config_data['dag_name'] }}',
@@ -19,6 +19,25 @@ dag = DAG(
 with dag:
 
 {%- for n in range(config_data['tasks']|length) %}
+
+
+
+{%-    if config_data['tasks'][n]['task_type'] == 'gcs_sensor' %}
+
+    def {{ config_data['tasks'][n]['task_id'] }}(**kwargs):
+        if int(kwargs['current_task']) >= int(kwargs['start_task']):
+            GCSObjectsWithPrefixExistenceSensor(
+                bucket='{{ config_data['tasks'][n]['bucket'] }}',
+                prefix='{{ config_data['tasks'][n]['prefix'] }}',
+                mode='poke',
+                task_id='{{ config_data['tasks'][n]['task_id'] }}',
+                trigger_rule='none_failed', 
+            )
+        else:
+            raise AirflowSkipException
+             
+{%- endif %}
+
 
 {%-    if config_data['tasks'][n]['task_type'] == 'gcs_to_bigquery' %}
 

@@ -1,0 +1,11 @@
+---
+dag_name: simple_push_elt
+schedule_interval: * * * * *
+tasks:
+- task_id: gcs_sensor
+  task_type: gcs_sensor
+  bucket: anand-bq-test-2
+  prefix: HCA_TEST/
+- task_id: call_sp
+  task_type: bigquery_stored_procedure
+  stored_procedure_name: Anand_BQ_Test_1.GetJobHash('a')
