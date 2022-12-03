@@ -26,10 +26,11 @@ config_file = ''
 template_name = 'simple_dag.template'
 generate_file_name = ''
 def main():
-    parser = argparse.ArgumentParser(description= \
-        '''This application downloads CCDA files from GCS, 
-        parses them using bluebutton.js library
-        and uploads the parsed content to BigQuery.''')
+    description = '''This application creates Composer DAGs based on the config file
+        config.json and template. Current template supported are: 
+        "simple_dag.template" '''
+        
+    parser = argparse.ArgumentParser(description= description)
 
     parser.add_argument('-config_file', 
                     required=True,
