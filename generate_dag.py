@@ -18,11 +18,12 @@ from jinja2 import Environment, FileSystemLoader
 import os
 import json
 import argparse
+import yaml
 from colorama import Fore, Back, Style, init
 init(autoreset=True)
 
-config_json = ''
-template_name = ''
+config_file = ''
+template_name = 'simple_dag.template'
 generate_file_name = ''
 def main():
     parser = argparse.ArgumentParser(description= \
@@ -30,47 +31,37 @@ def main():
         parses them using bluebutton.js library
         and uploads the parsed content to BigQuery.''')
 
-    parser.add_argument('-config_json', 
+    parser.add_argument('-config_file', 
                     required=True,
-                    help='''Provide DAG configuration json file location
-                    e.g. ./config.json''')
-    parser.add_argument('-template_name', 
-                        required=True,
-                        help='''Provide template name to use
-                                e.q. simple_dag.template''')
-    parser.add_argument('-generate_file_name', 
-                        required=True,
-                        help='''Provide file name to generate
-                                e.q. simple_dag.py''')
+                    help='''Provide template configuration YAML file location
+                    e.g. ./config.yaml''')
     options = parser.parse_args()
-    global config_json, template_name,generate_file_name
+    global config_file
 
-    config_json = options.config_json
-    template_name = options.template_name
-    generate_file_name = options.generate_file_name
+    config_file = options.config_file
+
 def process():
     print("{:<30}".format("Generating DAG for  ") + Fore.GREEN + template_name)
-    print("{:<30}".format("Config file ") + Fore.GREEN + config_json)
+    print("{:<30}".format("Config file ") + Fore.GREEN + config_file)
 
-    f = open(config_json)
-    config_data = json.load(f)
+    with open(config_file,'r') as f:
+        config_data = yaml.safe_load(f)
+        file_dir = os.path.dirname(os.path.abspath(__file__))
+        env = Environment(loader=FileSystemLoader(file_dir))
 
-    file_dir = os.path.dirname(os.path.abspath(__file__))
-    env = Environment(loader=FileSystemLoader(file_dir))
+        template = env.get_template(template_name)
 
-    template = env.get_template(template_name)
+        values = {}
+        generate_file_name = config_data['dag_name']+'.py'
+        filename = os.path.join(file_dir, generate_file_name)
 
-    values = {}
-
-    filename = os.path.join(file_dir, generate_file_name)
-
-    with open(filename, 'w') as fh:
-        fh.write(template.render(
-            config_data=config_data,
-            **values
-        ))
-    print("{:<30}".format("Finished generating file ") + Fore.GREEN + generate_file_name)
-    print("{:<30}".format("Number of tasks generated ") + Fore.GREEN + str(len(config_data['tasks'])))
+        with open(filename, 'w') as fh:
+            fh.write(template.render(
+                config_data=config_data,
+                **values
+            ))
+        print("{:<30}".format("Finished generating file ") + Fore.GREEN + generate_file_name)
+        print("{:<30}".format("Number of tasks generated ") + Fore.GREEN + str(len(config_data['tasks'])))
 
 if __name__ == '__main__':
     main()
