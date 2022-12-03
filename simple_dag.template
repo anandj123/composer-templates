@@ -66,8 +66,6 @@ with dag:
             raise AirflowSkipException
     
 {%- endif %}
-
-
 {%- endfor %}
 
 
@@ -88,8 +86,6 @@ with dag:
 
     current_task += 1
 {%-    set item.value = item.value + ' >> ' + config_data['tasks'][n]['task_id'] %}
-
-
 {%- endfor %}
 
     {{ item.value }}

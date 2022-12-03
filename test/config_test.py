@@ -1,7 +1,7 @@
-import json
-f = open("config.json")
-config_data = json.load(f)
-
+import yaml
+f = open("config.yaml")
+config_data = yaml.safe_load(f)
+    
 def test_tasks():
     assert(len(config_data['tasks'])>0)
 def test_dag_name():
