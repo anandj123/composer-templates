@@ -1,6 +1,6 @@
 ---
 dag_name: simple_push_elt
-schedule_interval: * * * * *
+schedule_interval: None
 tasks:
 - task_id: gcs_sensor
   task_type: gcs_sensor
