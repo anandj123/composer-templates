@@ -4,7 +4,6 @@ from airflow.models import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
-from airflow.operators.bash_operator import BashOperator
 from airflow.models import Variable
 from airflow.operators.python_operator import PythonOperator
 from airflow.exceptions import AirflowSkipException
@@ -35,14 +34,12 @@ with dag:
     {%- for n in range(config_data['tasks']|length) %}
     {{ config_data['tasks'][n]['task_id'] }} = {{ config_data['tasks'][n]['task_type'] }} (
 
-                         {%- for key in config_data['tasks'][n].keys() %}
-                            {%- if key != 'task_type' %}
-                                {{ key }} = '{{ config_data['tasks'][n][key] }}',
-                            {%- endif %}
-                         {%- endfor %}
-                                trigger_rule='none_failed',
-                               )
-
+                    {%- for key in config_data['tasks'][n].keys() %}
+                    {%- if key != 'task_type' %}
+                        {{ key }} = '{{ config_data['tasks'][n][key] }}',
+                    {%- endif %}
+                    {%- endfor %}
+                        trigger_rule='none_failed')
 
     current_task += 1
     {%- set item.value = item.value + ' >> ' + config_data['tasks'][n]['task_id'] %}

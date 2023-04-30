@@ -47,3 +47,10 @@ This will generate the file with "dag_name" variable in the config file yaml fil
 ```sh
 python3 -m pytest -v
 ```
+# Local installation
+
+Install airflow library
+
+```
+pip install "apache-airflow[celery]==2.6.0" --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.6.0/constraints-3.7.txt"
+```

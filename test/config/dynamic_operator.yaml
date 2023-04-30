@@ -5,3 +5,6 @@ schedule_interval: "None"
 tasks:
 - task_id: dynamic1 
   task_type:  airflow.operators.dummy_operator.DummyOperator
+- task_id: bash1
+  task_type: airflow.operators.bash_operator.BashOperator
+  bash_command: 'echo "hello 1"'

@@ -42,7 +42,7 @@ def main():
     config_file = options.config_file
 
 def process():
-    print("{:<30}".format("Generating DAG for  ") + Fore.GREEN + template_name)
+    print("Generating DAG for: {}".format(template_name))
     print("{:<30}".format("Config file ") + Fore.GREEN + config_file)
 
     with open(config_file,'r') as f:
