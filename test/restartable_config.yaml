@@ -1,5 +1,6 @@
 ---
-dag_name: simple_dag
+dag_template: restartable_dag 
+dag_name: restartable_dag_elt
 schedule_interval: 0 0 0 * *
 tasks:
 - task_id: preprocess

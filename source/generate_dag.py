@@ -48,13 +48,15 @@ def process():
     with open(config_file,'r') as f:
         config_data = yaml.safe_load(f)
         file_dir = os.path.dirname(os.path.abspath(__file__))
-        env = Environment(loader=FileSystemLoader(file_dir))
 
+        template_dir = os.path.join(file_dir,"templates")
+        env = Environment(loader=FileSystemLoader(template_dir))
         template = env.get_template(config_data['dag_template']+".template")
 
         values = {}
-        generate_file_name = config_data['dag_name']+'.py'
-        filename = os.path.join(file_dir, generate_file_name)
+        generate_file_name = config_data['dag_name'] +'.py'
+        filename = os.path.join(os.path.dirname(os.path.abspath(config_file)),
+                         generate_file_name)
 
         with open(filename, 'w') as fh:
             fh.write(template.render(
