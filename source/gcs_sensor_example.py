@@ -14,7 +14,7 @@ from airflow.providers.google.cloud.operators.gcs import GCSDeleteObjectsOperato
 import logging as log
 
 dag = DAG(
-    dag_id='simple_push_elt',
+    dag_id='gcs_sensor_dag',
     schedule_interval=None,
     start_date=airflow.utils.dates.days_ago(0)
 )
@@ -44,6 +44,6 @@ with dag:
     )
     trigger_files_processor_dag_task = TriggerDagRunOperator(
         task_id='trigger_files_processor_dag',
-        trigger_dag_id='simple_push_elt'
+        trigger_dag_id='gcs_sensor_dag'
     )
     start >> gcs_sensor >> bash_xcom >> gcs_remove >> trigger_files_processor_dag_task
