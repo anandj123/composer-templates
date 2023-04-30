@@ -10,6 +10,7 @@ from airflow.exceptions import AirflowSkipException
 from airflow.providers.google.cloud.sensors.gcs import GCSObjectsWithPrefixExistenceSensor
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.bash_operator import BashOperator
+from airflow.operators.bash_operator import BashOperator
 
 dag = DAG(
     dag_id='testing_dag2',
@@ -34,5 +35,11 @@ with dag:
                         trigger_rule='none_failed')
 
     current_task += 1
+    bash2 = airflow.operators.bash_operator.BashOperator (
+                        task_id = 'bash2',
+                        bash_command = 'echo "hello 2"',
+                        trigger_rule='none_failed')
 
-    start >> dynamic1 >> bash1
+    current_task += 1
+
+    start >> dynamic1 >> bash1 >> bash2

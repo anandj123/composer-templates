@@ -7,4 +7,7 @@ tasks:
   task_type:  airflow.operators.dummy_operator.DummyOperator
 - task_id: bash1
   task_type: airflow.operators.bash_operator.BashOperator
-  bash_command: 'echo "hello 1"'
+  bash_command: echo "hello 1"
+- task_id: bash2
+  task_type: airflow.operators.bash_operator.BashOperator
+  bash_command: echo "hello 2"
