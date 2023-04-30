@@ -11,7 +11,7 @@ python3 -m pip install -r requirements.txt
 ```yaml
 ---
 dag_name: simple_dag
-schedule_interval: 0 0 0 * *
+schedule_interval: "0 0 0 * *"
 tasks:
 - task_id: preprocess
   task_type: bash_operator

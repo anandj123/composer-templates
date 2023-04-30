@@ -20,46 +20,50 @@ with dag:
 
     def preprocess(**kwargs):
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            BashOperator(
+            preprocess = BashOperator(
             task_id='preprocess',
             trigger_rule='none_failed', 
-            bash_command='./scripts/cmd.sh')
+            bash_command="./scripts/cmd.sh")
+            preprocess.execute(dict())
         else:
             raise AirflowSkipException
 
     def load_data(**kwargs):
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            GoogleCloudStorageToBigQueryOperator(
+            load_data = GoogleCloudStorageToBigQueryOperator(
             task_id='load_data',
             trigger_rule='none_failed', 
             bucket='anand-bq-test-2',
             source_objects=['HCA_TEST/HCA_TEST_HCA_Test.csv'],
             destination_project_dataset_table='anand-bq-test-2.Anand_BQ_Test_1.test3',
             write_disposition='WRITE_TRUNCATE')
+            load_data.execute(dict()) 
         else:
             raise AirflowSkipException
 
     def call_sp(**kwargs):
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            BigQueryInsertJobOperator(
+            call_sp = BigQueryInsertJobOperator(
             task_id='call_sp',
             trigger_rule='none_failed', 
             configuration={"query": {
                            "query": "call Anand_BQ_Test_1.GetJobHash('a')",
                             "useLegacySql": False,
                            }})
+            call_sp.execute(dict()) 
         else:
             raise AirflowSkipException
 
     def call_sp2(**kwargs):
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            BigQueryInsertJobOperator(
+            call_sp2 = BigQueryInsertJobOperator(
             task_id='call_sp2',
             trigger_rule='none_failed', 
             configuration={"query": {
                            "query": "call Anand_BQ_Test_1.GetJobHash('b')",
                             "useLegacySql": False,
                            }})
+            call_sp2.execute(dict()) 
         else:
             raise AirflowSkipException
 

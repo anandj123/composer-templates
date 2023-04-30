@@ -12,7 +12,7 @@ from airflow.providers.google.cloud.sensors.gcs import GCSObjectsWithPrefixExist
 
 dag = DAG(
     dag_id='gcs_sensor_dag',
-    schedule_interval='None',
+    schedule_interval=None,
     start_date=airflow.utils.dates.days_ago(0)
 )
 

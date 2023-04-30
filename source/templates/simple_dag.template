@@ -8,7 +8,11 @@ from airflow.operators.bash_operator import BashOperator
 
 dag = DAG(
     dag_id='{{ config_data['dag_name'] }}',
+{%-    if config_data['schedule_interval'] == 'None' %}
     schedule_interval={{ config_data['schedule_interval'] }},
+{%- else %}
+    schedule_interval='{{ config_data['schedule_interval'] }}',
+{%- endif %}
     start_date=airflow.utils.dates.days_ago(0),
     catchup=False,
 )

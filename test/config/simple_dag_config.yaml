@@ -1,7 +1,7 @@
 ---
 dag_template: simple_dag 
 dag_name: simple_push_elt 
-schedule_interval: None
+schedule_interval: "@hourly" 
 tasks:
 - task_id: bash1
   task_type: bas_operator

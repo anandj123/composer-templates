@@ -7,25 +7,16 @@ from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobO
 from airflow.operators.bash_operator import BashOperator
 
 dag = DAG(
-    dag_id='simple_push_elt',
-    schedule_interval='@hourly',
+    dag_id='testing_dag',
+    schedule_interval=None,
     start_date=airflow.utils.dates.days_ago(0),
     catchup=False,
 )
  
-with dag:
-    start = DummyOperator(
+with dag: 
+    start = airflow.operators.dummy_operator.DummyOperator(
         task_id='start',
         dag=dag
     )
-    bash1 = BashOperator(
-         task_id='bash1',
-         bash_command='echo "hello 1"')
-    bash2 = BashOperator(
-         task_id='bash2',
-         bash_command='echo "hello 2"')
-    bash3 = BashOperator(
-         task_id='bash3',
-         bash_command='echo "hello 3"')
 
-    start >> bash1 >> bash2 >> bash3
+    start 
