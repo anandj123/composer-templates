@@ -1,0 +1,7 @@
+---
+dag_template: dynamic_operator 
+dag_name: testing_dag2 
+schedule_interval: "None"
+tasks:
+- task_id: dynamic1 
+  task_type:  airflow.operators.dummy_operator.DummyOperator

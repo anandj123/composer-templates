@@ -1,0 +1,51 @@
+import airflow
+from datetime import datetime
+from airflow.models import DAG
+from airflow.operators.dummy_operator import DummyOperator
+from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOperator
+from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
+from airflow.operators.bash_operator import BashOperator
+from airflow.models import Variable
+from airflow.operators.python_operator import PythonOperator
+from airflow.exceptions import AirflowSkipException
+from airflow.providers.google.cloud.sensors.gcs import GCSObjectsWithPrefixExistenceSensor
+
+{%- for n in range(config_data['tasks']|length) %}
+from {{ '.'.join(config_data['tasks'][n]['task_type'].split('.')[0:-1]) }} import {{ '.'.join(config_data['tasks'][n]['task_type'].split('.')[-1:]) }} 
+{%- endfor %}
+
+dag = DAG(
+    dag_id='{{ config_data['dag_name'] }}',
+    {%- if config_data['schedule_interval'] == 'None' %}
+    schedule_interval={{ config_data['schedule_interval'] }},
+    {%- else %}
+    schedule_interval='{{ config_data['schedule_interval'] }}',
+    {%- endif %}
+    start_date=airflow.utils.dates.days_ago(0)
+)
+
+with dag:
+
+    start_task = Variable.get('{{ config_data['dag_name'] }}_start_step',default_var='1')    
+    start = DummyOperator(task_id='start')
+
+    {%- set item = namespace(value='start') %}
+
+    current_task = 1
+    {%- for n in range(config_data['tasks']|length) %}
+    {{ config_data['tasks'][n]['task_id'] }} = {{ config_data['tasks'][n]['task_type'] }} (
+
+                         {%- for key in config_data['tasks'][n].keys() %}
+                            {%- if key != 'task_type' %}
+                                {{ key }} = '{{ config_data['tasks'][n][key] }}',
+                            {%- endif %}
+                         {%- endfor %}
+                                trigger_rule='none_failed',
+                               )
+
+
+    current_task += 1
+    {%- set item.value = item.value + ' >> ' + config_data['tasks'][n]['task_id'] %}
+    {%- endfor %}
+
+    {{ item.value }}
