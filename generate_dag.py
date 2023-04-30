@@ -50,7 +50,7 @@ def process():
         file_dir = os.path.dirname(os.path.abspath(__file__))
         env = Environment(loader=FileSystemLoader(file_dir))
 
-        template = env.get_template(template_name)
+        template = env.get_template(config_data['dag_template']+".template")
 
         values = {}
         generate_file_name = config_data['dag_name']+'.py'
@@ -61,8 +61,13 @@ def process():
                 config_data=config_data,
                 **values
             ))
-        print("{:<30}".format("Finished generating file ") + Fore.GREEN + generate_file_name)
-        print("{:<30}".format("Number of tasks generated ") + Fore.GREEN + str(len(config_data['tasks'])))
+
+        print("{:<30}".format("Finished generating file ") + 
+                    Fore.GREEN + 
+                    generate_file_name)
+        print("{:<30}".format("Number of tasks generated ") + 
+                    Fore.GREEN + 
+                    str(len(config_data['tasks'])))
 
 if __name__ == '__main__':
     main()

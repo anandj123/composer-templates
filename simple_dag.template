@@ -5,106 +5,52 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
 from airflow.operators.bash_operator import BashOperator
-from airflow.models import Variable
-from airflow.operators.python_operator import PythonOperator
-from airflow.exceptions import AirflowSkipException
-from airflow.providers.google.cloud.sensors.gcs import GCSObjectsWithPrefixExistenceSensor
 
 dag = DAG(
     dag_id='{{ config_data['dag_name'] }}',
-    schedule_interval='{{ config_data['schedule_interval'] }}',
-    start_date=airflow.utils.dates.days_ago(0)
+    schedule_interval={{ config_data['schedule_interval'] }},
+    start_date=airflow.utils.dates.days_ago(0),
+    cathup=False
 )
 
 with dag:
+    start = DummyOperator(
+        task_id='start',
+        dag=dag
+    )
 
-{%- for n in range(config_data['tasks']|length) %}
-
-
-
-{%-    if config_data['tasks'][n]['task_type'] == 'gcs_sensor' %}
-
-    def {{ config_data['tasks'][n]['task_id'] }}(**kwargs):
-        if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            GCSObjectsWithPrefixExistenceSensor(
-                bucket='{{ config_data['tasks'][n]['bucket'] }}',
-                prefix='{{ config_data['tasks'][n]['prefix'] }}',
-                mode='poke',
-                task_id='{{ config_data['tasks'][n]['task_id'] }}',
-                trigger_rule='none_failed', 
-            )
-        else:
-            raise AirflowSkipException
-             
-{%- endif %}
-
-
-{%-    if config_data['tasks'][n]['task_type'] == 'gcs_to_bigquery' %}
-
-    def {{ config_data['tasks'][n]['task_id'] }}(**kwargs):
-        if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            GoogleCloudStorageToBigQueryOperator(
-            task_id='{{ config_data['tasks'][n]['task_id'] }}',
-            trigger_rule='none_failed', 
-            bucket='{{ config_data['tasks'][n]['bucket'] }}',
-            source_objects={{ config_data['tasks'][n]['source_objects'] }},
-            destination_project_dataset_table='{{ config_data['tasks'][n]['biquery_table'] }}',
-            write_disposition='{{ config_data['tasks'][n]['write_disposition'] }}')
-        else:
-            raise AirflowSkipException
-             
-{%- endif %}
-
-
-{%-    if config_data['tasks'][n]['task_type'] == 'bigquery_stored_procedure' %}
-
-    def {{ config_data['tasks'][n]['task_id'] }}(**kwargs):
-        if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            BigQueryInsertJobOperator(
-            task_id='{{ config_data['tasks'][n]['task_id'] }}',
-            trigger_rule='none_failed', 
-            configuration={"query": {
-                           "query": "call {{ config_data['tasks'][n]['stored_procedure_name'] }}",
-                            "useLegacySql": False,
-                           }})
-        else:
-            raise AirflowSkipException
-    
-{%- endif %}
-
-
-{%-    if config_data['tasks'][n]['task_type'] == 'bash_operator' %}
-
-    def {{ config_data['tasks'][n]['task_id'] }}(**kwargs):
-        if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            BashOperator(
-            task_id='{{ config_data['tasks'][n]['task_id'] }}',
-            trigger_rule='none_failed', 
-            bash_command='{{ config_data['tasks'][n]['bash_command'] }}')
-        else:
-            raise AirflowSkipException
-    
-{%- endif %}
-{%- endfor %}
-
-
-    start_task = Variable.get('{{ config_data['dag_name'] }}_start_step',default_var='1')    
-    start = DummyOperator(task_id='start')
 
 {%- set item = namespace(value='start') %}
 
-    current_task = 1
 {%- for n in range(config_data['tasks']|length) %}
-    {{ config_data['tasks'][n]['task_id'] }} = PythonOperator(
-                                task_id='{{ config_data['tasks'][n]['task_id'] }}',
-                                provide_context=True,
-                                python_callable={{ config_data['tasks'][n]['task_id'] }},
-                                trigger_rule='none_failed',
-                                op_kwargs={'current_task': current_task,'start_task': start_task}
-                               )
 
-    current_task += 1
+{%-    if config_data['tasks'][n]['task_type'] == 'gcs_to_bigquery' %}
+    {{ config_data['tasks'][n]['task_id'] }} = GoogleCloudStorageToBigQueryOperator(
+         task_id='{{ config_data['tasks'][n]['task_id'] }}',
+         bucket='{{ config_data['tasks'][n]['bucket'] }}',
+         source_objects={{ config_data['tasks'][n]['source_objects'] }},
+         destination_project_dataset_table='{{ config_data['tasks'][n]['destination_project_dataset_table'] }}',
+         write_disposition='{{ config_data['tasks'][n]['write_disposition'] }}')
 {%-    set item.value = item.value + ' >> ' + config_data['tasks'][n]['task_id'] %}
+{%- endif %}
+
+{%-    if config_data['tasks'][n]['task_type'] == 'bigquery_stored_procedure' %}
+    {{ config_data['tasks'][n]['task_id'] }} = BigQueryInsertJobOperator(
+         task_id='{{ config_data['tasks'][n]['task_id'] }}',
+         configuration={"query": {
+                        "query": "call {{ config_data['tasks'][n]['stored_procedure_name'] }}",
+                        "useLegacySql": False,
+                       }})
+{%-    set item.value = item.value + ' >> ' + config_data['tasks'][n]['task_id'] %}
+{%- endif %}
+
+{%-    if config_data['tasks'][n]['task_type'] == 'bas_operator' %}
+    {{ config_data['tasks'][n]['task_id'] }} = BashOperator(
+         task_id='{{ config_data['tasks'][n]['task_id'] }}',
+         bash_command='{{ config_data['tasks'][n]['bash_command'] }}')
+{%-    set item.value = item.value + ' >> ' + config_data['tasks'][n]['task_id'] %}
+{%- endif %}
+
 {%- endfor %}
 
     {{ item.value }}

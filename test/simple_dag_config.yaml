@@ -1,0 +1,11 @@
+---
+dag_template: simple_dag 
+dag_name: simple_push_elt 
+schedule_interval: None
+tasks:
+- task_id: bash1
+  task_type: bas_operator
+  bash_command: 'echo "hello 1"'
+- task_id: bash2
+  task_type: bas_operator
+  bash_command: 'echo "hello 2"'
