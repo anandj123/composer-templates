@@ -1,12 +1,17 @@
 ---
-dag_template: gcs_sensor 
-dag_name: gcs_sensor_dag 
+dag_template: "gcs_sensor" 
+dag_name: "gcs_sensor_dag_dynamic" 
 schedule_interval: "None"
 tasks:
-- task_id: gcs_sensor
-  task_type: gcs_sensor
+- task_id: gcs_sensor_step
+  task_type: airflow.providers.google.cloud.sensors.gcs.GCSObjectsWithPrefixExistenceSensor
   bucket: anand-bq-test-2
-  prefix: HCA_TEST/
-- task_id: call_sp
-  task_type: bigquery_stored_procedure
-  stored_procedure_name: Anand_BQ_Test_1.GetJobHash('a')
+  prefix: gcs-sensor/
+  mode: poke
+- task_id: print_file_names
+  task_type: airflow.operators.bash_operator.BashOperator
+  bash_command: echo {{ ti.xcom_pull(task_ids="gcs_sensor_step") }}
+- task_id: gcs_delete_archive_file
+  task_type: airflow.providers.google.cloud.operators.gcs.GCSDeleteObjectsOperator
+  bucket_name: anand-bq-test-2
+  prefix: gcs-sensor/
