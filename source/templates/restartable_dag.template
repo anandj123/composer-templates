@@ -24,13 +24,14 @@ with dag:
 
     def {{ config_data['tasks'][n]['task_id'] }}(**kwargs):
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            GoogleCloudStorageToBigQueryOperator(
+            {{ config_data['tasks'][n]['task_id'] }} = GoogleCloudStorageToBigQueryOperator(
             task_id='{{ config_data['tasks'][n]['task_id'] }}',
             trigger_rule='none_failed', 
             bucket='{{ config_data['tasks'][n]['bucket'] }}',
             source_objects={{ config_data['tasks'][n]['source_objects'] }},
             destination_project_dataset_table='{{ config_data['tasks'][n]['biquery_table'] }}',
             write_disposition='{{ config_data['tasks'][n]['write_disposition'] }}')
+            {{ config_data['tasks'][n]['task_id'] }}.execute(dict()) 
         else:
             raise AirflowSkipException
              
@@ -41,13 +42,14 @@ with dag:
 
     def {{ config_data['tasks'][n]['task_id'] }}(**kwargs):
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            BigQueryInsertJobOperator(
+            {{ config_data['tasks'][n]['task_id'] }} = BigQueryInsertJobOperator(
             task_id='{{ config_data['tasks'][n]['task_id'] }}',
             trigger_rule='none_failed', 
             configuration={"query": {
                            "query": "call {{ config_data['tasks'][n]['stored_procedure_name'] }}",
                             "useLegacySql": False,
                            }})
+            {{ config_data['tasks'][n]['task_id'] }}.execute(dict()) 
         else:
             raise AirflowSkipException
     
@@ -58,10 +60,11 @@ with dag:
 
     def {{ config_data['tasks'][n]['task_id'] }}(**kwargs):
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            BashOperator(
+            {{ config_data['tasks'][n]['task_id'] }} = BashOperator(
             task_id='{{ config_data['tasks'][n]['task_id'] }}',
             trigger_rule='none_failed', 
-            bash_command='{{ config_data['tasks'][n]['bash_command'] }}')
+            bash_command="{{ config_data['tasks'][n]['bash_command'] }}")
+            {{ config_data['tasks'][n]['task_id'] }}.execute(dict())
         else:
             raise AirflowSkipException
     
