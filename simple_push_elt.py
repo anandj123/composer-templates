@@ -10,7 +10,7 @@ dag = DAG(
     dag_id='simple_push_elt',
     schedule_interval=None,
     start_date=airflow.utils.dates.days_ago(0),
-    cathup=False
+    catchup=False,
 )
 
 with dag:
@@ -24,5 +24,8 @@ with dag:
     bash2 = BashOperator(
          task_id='bash2',
          bash_command='echo "hello 2"')
+    bash3 = BashOperator(
+         task_id='bash3',
+         bash_command='echo "hello 3"')
 
-    start >> bash1 >> bash2
+    start >> bash1 >> bash2 >> bash3

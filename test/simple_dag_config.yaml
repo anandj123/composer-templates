@@ -9,3 +9,6 @@ tasks:
 - task_id: bash2
   task_type: bas_operator
   bash_command: 'echo "hello 2"'
+- task_id: bash3
+  task_type: bas_operator
+  bash_command: 'echo "hello 3"'
