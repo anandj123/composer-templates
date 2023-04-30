@@ -37,8 +37,10 @@ tasks:
 # Run template
 
 ```sh
-python3 generate_dag.py -config_file config.yaml
+python3 source/generate_dag.py -config_file test/simple_dag_config.yaml
 ```
+
+This will generate the file with "dag_name" variable in the config file yaml file in the same directory where the config file is located.
 
 # Run test
 
