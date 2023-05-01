@@ -22,7 +22,7 @@ with dag:
             preprocess = airflow.operators.bash_operator.BashOperator (
                             task_id = 'preprocess',
                             bash_command = 'scripts/cmd.sh ',
-                        trigger_rule='none_failed')
+                            trigger_rule='none_failed')
             preprocess.execute(kwargs) 
         else:
             raise AirflowSkipException
@@ -35,7 +35,7 @@ with dag:
                             source_objects = ['HCA_TEST/HCA_TEST_HCA_Test.csv'],
                             destination_project_dataset_table = 'anand-bq-test-2.Anand_BQ_Test_1.test3',
                             write_disposition = 'WRITE_TRUNCATE',
-                        trigger_rule='none_failed')
+                            trigger_rule='none_failed')
             load_data.execute(kwargs) 
         else:
             raise AirflowSkipException
@@ -45,7 +45,7 @@ with dag:
             call_sp = airflow.providers.google.cloud.operators.bigquery.BigQueryInsertJobOperator (
                             task_id = 'call_sp',
                             configuration = {'query': {'query': "call Anand_BQ_Test_1.GetJobHash('a')", 'useLegacySql': False}},
-                        trigger_rule='none_failed')
+                            trigger_rule='none_failed')
             call_sp.execute(kwargs) 
         else:
             raise AirflowSkipException

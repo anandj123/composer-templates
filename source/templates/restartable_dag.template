@@ -35,7 +35,7 @@ with dag:
                         {%- endif %}
                     {%- endif %}
                     {%- endfor %}
-                        trigger_rule='none_failed')
+                            trigger_rule='none_failed')
             {{ config_data['tasks'][n]['task_id'] }}.execute(kwargs) 
         else:
             raise AirflowSkipException
