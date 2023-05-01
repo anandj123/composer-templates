@@ -21,7 +21,7 @@ with dag:
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
             preprocess = airflow.operators.bash_operator.BashOperator (
                             task_id = 'preprocess',
-                            bash_command = 'scripts/cmd.sh',
+                            bash_command = 'scripts/cmd.sh ',
                         trigger_rule='none_failed')
             preprocess.execute(kwargs) 
         else:
