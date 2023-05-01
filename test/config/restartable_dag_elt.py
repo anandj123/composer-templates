@@ -46,10 +46,8 @@ with dag:
             call_sp = BigQueryInsertJobOperator(
             task_id='call_sp',
             trigger_rule='none_failed', 
-            configuration={"query": {
-                           "query": "call Anand_BQ_Test_1.GetJobHash('a')",
-                            "useLegacySql": False,
-                           }})
+            configuration={"query": {"query": "call Anand_BQ_Test_1.GetJobHash('a')", "useLegacySql": False}}
+                            )
             call_sp.execute(dict()) 
         else:
             raise AirflowSkipException

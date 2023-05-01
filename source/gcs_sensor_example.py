@@ -47,3 +47,7 @@ with dag:
         trigger_dag_id='gcs_sensor_dag'
     )
     start >> gcs_sensor >> bash_xcom >> gcs_remove >> trigger_files_processor_dag_task
+
+
+if __name__ == "__main__":
+    dag.test()

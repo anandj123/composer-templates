@@ -1,22 +1,18 @@
 ---
 dag_template: restartable_dag 
-dag_name: restartable_dag_elt
+dag_name: restartable_dag_elt_2
 schedule_interval: 0 0 0 * *
 tasks:
 - task_id: preprocess
-  task_type: bash_operator
-  bash_command: "./scripts/cmd.sh"
+  task_type: airflow.operators.bash_operator.BashOperator
+  bash_command: "scripts/cmd.sh"
 - task_id: load_data
-  task_type: gcs_to_bigquery
+  task_type: airflow.contrib.operators.gcs_to_bq.GoogleCloudStorageToBigQueryOperator
   bucket: anand-bq-test-2
   source_objects:
   - HCA_TEST/HCA_TEST_HCA_Test.csv
-  biquery_table: anand-bq-test-2.Anand_BQ_Test_1.test3
-  autodetect: 'True'
+  destination_project_dataset_table: anand-bq-test-2.Anand_BQ_Test_1.test3
   write_disposition: WRITE_TRUNCATE
 - task_id: call_sp
-  task_type: bigquery_stored_procedure
-  stored_procedure_name: Anand_BQ_Test_1.GetJobHash('a')
-- task_id: call_sp2
-  task_type: bigquery_stored_procedure
-  stored_procedure_name: Anand_BQ_Test_1.GetJobHash('b')
+  task_type: airflow.providers.google.cloud.operators.bigquery.BigQueryInsertJobOperator
+  configuration: {"query": {"query": "call Anand_BQ_Test_1.GetJobHash('a')", "useLegacySql": False}}
