@@ -23,7 +23,7 @@ with dag:
                             task_id = 'preprocess',
                             bash_command = 'scripts/cmd.sh',
                         trigger_rule='none_failed')
-            preprocess.execute(dict()) 
+            preprocess.execute(kwargs) 
         else:
             raise AirflowSkipException
 
@@ -81,5 +81,3 @@ with dag:
     current_task += 1
 
     start >> preprocess >> load_data >> call_sp
-if __name__ == "__main__":
-    dag.test()
