@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 import yaml
-f = open("config/simple_dag_config.yaml")
+f = open("./test/config/simple_dag_config.yaml")
 config_data = yaml.safe_load(f)
     
 def test_tasks():
