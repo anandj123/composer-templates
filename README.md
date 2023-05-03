@@ -8,7 +8,6 @@ python3 -m pip install -r requirements.txt
 
 # Configuration file
 
---devansh test commit
 
 ```yaml
 ---
