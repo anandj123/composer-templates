@@ -1,5 +1,5 @@
-# DAGTemplates
-Composer DAG template project
+# Composer DAG Templates
+Composer DAG template projects
 
 # Install requirements
 ```sh
@@ -7,6 +7,7 @@ python3 -m pip install -r requirements.txt
 ```
 
 # Configuration file
+
 
 ```yaml
 ---
