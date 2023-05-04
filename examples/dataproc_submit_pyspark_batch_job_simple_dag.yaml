@@ -1,0 +1,24 @@
+---
+dag_template: simple_dag
+dag_name: dataproc_submit_pyspark_batch_job_simple_dag
+schedule_interval: '@once'
+tasks:
+- task_id: list_dataproc_batches
+  task_type: airflow.providers.google.cloud.operators.dataproc.DataprocListBatchesOperator
+  project_id: devansh-365318
+  region: us-central1
+- task_id: delete_dataproc_batch
+  task_type: airflow.providers.google.cloud.operators.dataproc.DataprocDeleteBatchOperator
+  batch_id: batch-composer-simple-dag-test
+  region: us-central1
+  project_id: devansh-365318
+- task_id: dataproc_submit_pyspark_batch_job
+  task_type: airflow.providers.google.cloud.operators.dataproc.DataprocCreateBatchOperator
+  project_id: devansh-365318
+  region: us-central1
+  batch: {
+            "pyspark_batch": {
+                "main_python_file_uri": "gs://composer-temp-dataproc/pyspark_scripts/demo_pyspark_script.py",
+                "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
+            }}
+  batch_id: batch-composer-simple-dag-test
