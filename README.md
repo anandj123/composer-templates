@@ -15,10 +15,10 @@ dag_name: simple_dag
 schedule_interval: "0 0 0 * *"
 tasks:
 - task_id: preprocess
-  task_type: bash_operator
+  task_type: airflow.operators.bash_operator.BashOperator
   bash_command: "./scripts/cmd.sh"
 - task_id: load_data
-  task_type: gcs_to_bigquery
+  task_type: airflow.contrib.operators.gcs_to_bq.GoogleCloudStorageToBigQueryOperator
   bucket: anand-bq-test-2
   source_objects:
   - HCA_TEST/HCA_TEST_HCA_Test.csv
