@@ -1,4 +1,4 @@
-# Composer DAG Templates
+# Cloud Composer DAG Templates
 Composer DAG template projects
 
 # Install requirements
