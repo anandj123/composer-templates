@@ -68,7 +68,12 @@ def generate_dag_file():
         env = Environment(loader=FileSystemLoader(template_dir))
         template = env.get_template(dag_template+".template")
         values = {}
-        generate_file_name = os.path.join(os.path.dirname(config_path), dag_name+'.py')
+
+        dag_path = os.path.join(os.path.dirname(config_path),"dag") 
+        if not os.path.exists(dag_path):
+            os.makedirs(dag_path)
+            
+        generate_file_name = os.path.join(dag_path, dag_name + '.py')
         with open(generate_file_name, 'w') as fh:
             fh.write(template.render(config_data=config_data, **values))
 

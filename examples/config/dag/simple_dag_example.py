@@ -7,24 +7,27 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.operators.bash_operator import BashOperator
 
 dag = DAG(
-    dag_id='simple_push_elt',
+    dag_id='simple_dag_example',
     schedule_interval=None,
     start_date=airflow.utils.dates.days_ago(0)
 )
 
 with dag:
     start = DummyOperator( task_id='start')
+
     bash_task_1 = airflow.operators.bash_operator.BashOperator (
-                        task_id = 'bash_task_1',
-                        bash_command = 'echo "hello 1"',
-                        trigger_rule='none_failed')
+                            task_id = 'bash_task_1',
+                            bash_command = 'echo "hello 1"',
+                            trigger_rule='none_failed')
+
     bash_task_2 = airflow.operators.bash_operator.BashOperator (
-                        task_id = 'bash_task_2',
-                        bash_command = 'echo "hello 2"',
-                        trigger_rule='none_failed')
+                            task_id = 'bash_task_2',
+                            bash_command = 'echo "hello 2"',
+                            trigger_rule='none_failed')
+
     bash_task_3 = airflow.operators.bash_operator.BashOperator (
-                        task_id = 'bash_task_3',
-                        bash_command = 'echo "hello 3"',
-                        trigger_rule='none_failed')
+                            task_id = 'bash_task_3',
+                            bash_command = 'echo "hello 3"',
+                            trigger_rule='none_failed')
 
     start >> bash_task_1 >> bash_task_2 >> bash_task_3

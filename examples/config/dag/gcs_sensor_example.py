@@ -10,42 +10,33 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.providers.google.cloud.operators.gcs import GCSDeleteObjectsOperator
 
 dag = DAG(
-    dag_id='gcs_sensor_dag_dynamic',
+    dag_id='gcs_sensor_example',
     schedule_interval=None,
     start_date=airflow.utils.dates.days_ago(0)
 )
 
 with dag:
 
-    start_task = Variable.get('gcs_sensor_dag_dynamic_start_step',default_var='1')    
     start = DummyOperator(task_id='start')
-
-    current_task = 1
     gcs_sensor_step = airflow.providers.google.cloud.sensors.gcs.GCSObjectsWithPrefixExistenceSensor (
                         task_id = 'gcs_sensor_step',
                         bucket = 'anand-bq-test-2',
                         prefix = 'gcs-sensor/',
                         mode = 'poke',
                         trigger_rule='none_failed')
-
-    current_task += 1
     print_file_names = airflow.operators.bash_operator.BashOperator (
                         task_id = 'print_file_names',
                         bash_command = 'echo {{ ti.xcom_pull(task_ids="gcs_sensor_step") }}',
                         trigger_rule='none_failed')
-
-    current_task += 1
     gcs_delete_archive_file = airflow.providers.google.cloud.operators.gcs.GCSDeleteObjectsOperator (
                         task_id = 'gcs_delete_archive_file',
                         bucket_name = 'anand-bq-test-2',
                         prefix = 'gcs-sensor/',
                         trigger_rule='none_failed')
 
-    current_task += 1
-
     trigger_files_processor_dag_task = TriggerDagRunOperator(
         task_id='trigger_files_processor_dag',
-        trigger_dag_id='gcs_sensor_dag_dynamic'
+        trigger_dag_id='gcs_sensor_example'
     )
 
     start >> gcs_sensor_step >> print_file_names >> gcs_delete_archive_file >> trigger_files_processor_dag_task

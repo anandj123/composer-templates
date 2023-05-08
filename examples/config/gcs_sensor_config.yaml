@@ -1,6 +1,6 @@
 ---
 dag_template: "gcs_sensor" 
-dag_name: "gcs_sensor_dag_dynamic" 
+dag_name: "gcs_sensor_example" 
 schedule_interval: "None"
 tasks:
 - task_id: gcs_sensor_step

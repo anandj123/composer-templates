@@ -22,12 +22,10 @@ dag = DAG(
 
 with dag:
 
-    start_task = Variable.get('{{ config_data['dag_name'] }}_start_step',default_var='1')    
     start = DummyOperator(task_id='start')
 
     {%- set item = namespace(value='start') %}
 
-    current_task = 1
     {%- for n in range(config_data['tasks']|length) %}
     {{ config_data['tasks'][n]['task_id'] }} = {{ config_data['tasks'][n]['task_type'] }} (
 
@@ -38,7 +36,6 @@ with dag:
                     {%- endfor %}
                         trigger_rule='none_failed')
 
-    current_task += 1
     {%- set item.value = item.value + ' >> ' + config_data['tasks'][n]['task_id'] %}
     {%- endfor %}
 

@@ -10,7 +10,7 @@ from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOper
 from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
 
 dag = DAG(
-    dag_id='restartable_dag_elt_2',
+    dag_id='restartable_dag_elt',
     schedule_interval='0 0 0 * *',
     start_date=airflow.utils.dates.days_ago(0)
 )
@@ -51,7 +51,7 @@ with dag:
             raise AirflowSkipException
 
 
-    start_task = Variable.get('restartable_dag_elt_2_start_step',default_var='1')    
+    start_task = Variable.get('restartable_dag_elt_start_step',default_var='1')    
     start = DummyOperator(task_id='start')
 
     current_task = 1
