@@ -20,7 +20,7 @@ with dag:
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
             preprocess1 = airflow.operators.bash_operator.BashOperator (
                             task_id = 'preprocess1',
-                            bash_command = 'echo 'Hello 1'',
+                            bash_command = 'echo "Hello 1"',
                             trigger_rule='none_failed')
             preprocess1.execute(kwargs) 
         else:
@@ -30,7 +30,7 @@ with dag:
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
             preprocess2 = airflow.operators.bash_operator.BashOperator (
                             task_id = 'preprocess2',
-                            bash_command = 'echo 'Hello 2'',
+                            bash_command = 'echo "Hello 2"',
                             trigger_rule='none_failed')
             preprocess2.execute(kwargs) 
         else:

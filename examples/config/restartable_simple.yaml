@@ -5,7 +5,7 @@ schedule_interval: 0 0 0 * *
 tasks:
 - task_id: preprocess1
   task_type: airflow.operators.bash_operator.BashOperator
-  bash_command: "echo 'Hello 1'"
+  bash_command: echo "Hello 1"
 - task_id: preprocess2
   task_type: airflow.operators.bash_operator.BashOperator
-  bash_command: "echo 'Hello 2'"
+  bash_command: echo "Hello 2"
