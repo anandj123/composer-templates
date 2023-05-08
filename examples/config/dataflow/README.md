@@ -11,4 +11,4 @@ Run below command to generate the template:
 python3 ~/composer-templates/source/generate_dag.py -config_file ~/composer-templates/example/config/dataflow/dataflow_submit_classic_template_job_simple_dag.yaml
 ```
 
-Generated dag is stored in dag folder inside directory from where above command is run. Naviget to [dataflow dag](./dag/dataflow_submit_classic_template_job_simple_dag.py) for example output of above command.
+Generated dag is stored in dag folder inside directory from where above command is run. Navigate to [dataflow dag](./dag/dataflow_submit_classic_template_job_simple_dag.py) for example output of above command.
