@@ -1,0 +1,19 @@
+---
+dag_name: bq_to_gcs_simple_dag
+dag_template: simple_dag
+schedule_interval: '@hourly'
+tasks:
+- task_id: bq_query_execute
+  task_type: airflow.contrib.operators.bigquery_operator.BigQueryOperator
+  sql: 'SELECT * FROM `composer-templates-shared.hmh_demo.covid` WHERE case_reported_date = "2021-08-18"'
+  use_legacy_sql: False
+  write_disposition: WRITE_TRUNCATE
+  allow_large_results: True
+  destination_dataset_table: composer-templates-shared.hmh_demo.tmp_covid
+- task_id: export_to_gcs
+  task_type: airflow.contrib.operators.bigquery_to_gcs.BigQueryToCloudStorageOperator
+  source_project_dataset_table: composer-templates-shared.hmh_demo.tmp_covid
+  destination_cloud_storage_uris: "gs://hmh_demo/export_files/covid.csv"
+  export_format: CSV
+  field_delimiter: ','
+  print_header: True
