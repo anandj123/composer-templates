@@ -39,5 +39,5 @@ jobs:
         pytest -v
     - name: Deploy DAG to demo environment 
       run: |
-        python3 .\source\deploy_dag.py -input_folder .\examples\config\dag\ -composer_environment composer-templates-shared.us-central1.composer-demo-2-0
+        python3 source\deploy_dag.py -input_folder examples\config\dag\ -composer_environment composer-templates-shared.us-central1.composer-demo-2-0
 
