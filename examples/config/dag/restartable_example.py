@@ -25,7 +25,7 @@ with dag:
             preprocess1.execute(kwargs) 
         else:
             raise AirflowSkipException
-
+ 
     def preprocess2(**kwargs):
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
             preprocess2 = airflow.operators.bash.BashOperator (
