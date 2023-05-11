@@ -6,7 +6,7 @@ from airflow.models import Variable
 from airflow.exceptions import AirflowSkipException
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.providers.google.cloud.sensors.gcs import GCSObjectsWithPrefixExistenceSensor
-from airflow.operators.bash_operator import BashOperator
+from airflow.operators.bash import BashOperator
 from airflow.providers.google.cloud.operators.gcs import GCSDeleteObjectsOperator
 
 dag = DAG(
@@ -24,7 +24,7 @@ with dag:
                         prefix = 'gcs-sensor/',
                         mode = 'poke',
                         trigger_rule='none_failed')
-    print_file_names = airflow.operators.bash_operator.BashOperator (
+    print_file_names = airflow.operators.bash.BashOperator (
                         task_id = 'print_file_names',
                         bash_command = 'echo {{ ti.xcom_pull(task_ids="gcs_sensor_step") }}',
                         trigger_rule='none_failed')

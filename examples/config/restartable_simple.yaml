@@ -4,8 +4,8 @@ dag_name: restartable_example
 schedule_interval: "None" 
 tasks:
 - task_id: preprocess1
-  task_type: airflow.operators.bash_operator.BashOperator
+  task_type: airflow.operators.bash.BashOperator
   bash_command: echo "Hello 1"
 - task_id: preprocess2
-  task_type: airflow.operators.bash_operator.BashOperator
+  task_type: airflow.operators.bash.BashOperator
   bash_command: echo "Hello 2"

@@ -5,7 +5,7 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.models import Variable
 from airflow.operators.python_operator import PythonOperator
 from airflow.exceptions import AirflowSkipException
-from airflow.operators.bash_operator import BashOperator
+from airflow.operators.bash import BashOperator
 from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
 
@@ -19,7 +19,7 @@ with dag:
 
     def preprocess(**kwargs):
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            preprocess = airflow.operators.bash_operator.BashOperator (
+            preprocess = airflow.operators.bash.BashOperator (
                             task_id = 'preprocess',
                             bash_command = 'scripts/cmd.sh ',
                             trigger_rule='none_failed')

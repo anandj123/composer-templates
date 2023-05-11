@@ -9,7 +9,7 @@ tasks:
   prefix: gcs-sensor/
   mode: poke
 - task_id: print_file_names
-  task_type: airflow.operators.bash_operator.BashOperator
+  task_type: airflow.operators.bash.BashOperator
   bash_command: echo {{ ti.xcom_pull(task_ids="gcs_sensor_step") }}
 - task_id: gcs_delete_archive_file
   task_type: airflow.providers.google.cloud.operators.gcs.GCSDeleteObjectsOperator

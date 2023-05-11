@@ -5,8 +5,8 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.models import Variable
 from airflow.operators.python_operator import PythonOperator
 from airflow.exceptions import AirflowSkipException
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.bash_operator import BashOperator
+from airflow.operators.bash import BashOperator
+from airflow.operators.bash import BashOperator
 
 dag = DAG(
     dag_id='restartable_example',
@@ -18,7 +18,7 @@ with dag:
 
     def preprocess1(**kwargs):
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            preprocess1 = airflow.operators.bash_operator.BashOperator (
+            preprocess1 = airflow.operators.bash.BashOperator (
                             task_id = 'preprocess1',
                             bash_command = 'echo "Hello 1"',
                             trigger_rule='none_failed')
@@ -28,7 +28,7 @@ with dag:
 
     def preprocess2(**kwargs):
         if int(kwargs['current_task']) >= int(kwargs['start_task']):
-            preprocess2 = airflow.operators.bash_operator.BashOperator (
+            preprocess2 = airflow.operators.bash.BashOperator (
                             task_id = 'preprocess2',
                             bash_command = 'echo "Hello 2"',
                             trigger_rule='none_failed')

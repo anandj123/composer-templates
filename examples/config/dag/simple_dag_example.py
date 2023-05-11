@@ -2,9 +2,9 @@ import airflow
 from datetime import datetime
 from airflow.models import DAG
 from airflow.operators.dummy_operator import DummyOperator
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.bash_operator import BashOperator
+from airflow.operators.bash import BashOperator
+from airflow.operators.bash import BashOperator
+from airflow.operators.bash import BashOperator
 
 dag = DAG(
     dag_id='simple_dag_example',
@@ -15,17 +15,17 @@ dag = DAG(
 with dag:
     start = DummyOperator( task_id='start')
 
-    bash_task_1 = airflow.operators.bash_operator.BashOperator (
+    bash_task_1 = airflow.operators.bash.BashOperator (
                             task_id = 'bash_task_1',
                             bash_command = 'echo "hello 1"',
                             trigger_rule='none_failed')
 
-    bash_task_2 = airflow.operators.bash_operator.BashOperator (
+    bash_task_2 = airflow.operators.bash.BashOperator (
                             task_id = 'bash_task_2',
                             bash_command = 'echo "hello 2"',
                             trigger_rule='none_failed')
 
-    bash_task_3 = airflow.operators.bash_operator.BashOperator (
+    bash_task_3 = airflow.operators.bash.BashOperator (
                             task_id = 'bash_task_3',
                             bash_command = 'echo "hello 3"',
                             trigger_rule='none_failed')
