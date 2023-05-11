@@ -11,7 +11,7 @@ from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobO
 
 dag = DAG(
     dag_id='restartable_dag_elt',
-    schedule_interval='0 0 0 * *',
+    schedule_interval=None,
     start_date=airflow.utils.dates.days_ago(0)
 )
 

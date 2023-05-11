@@ -66,6 +66,11 @@ def get_dag_prefix(project_id, location, composer_env_id):
     response = authed_session.request('GET', environment_url)
     environment_data = response.json()
 
+    print(environment_data)
+
+# https://iam.googleapis.com/projects/424899038521/locations/global/workloadIdentityPools/github-action-pool-1/providers/github
+
+
     dag_gcs_path = environment_data['config']['dagGcsPrefix']
     print("Deploying DAG files to:", dag_gcs_path)
     dag_bucket_split = dag_gcs_path.split('/')

@@ -10,7 +10,7 @@ from airflow.operators.bash_operator import BashOperator
 
 dag = DAG(
     dag_id='restartable_example',
-    schedule_interval='0 0 0 * *',
+    schedule_interval=None,
     start_date=airflow.utils.dates.days_ago(0)
 )
 

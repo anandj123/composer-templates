@@ -1,7 +1,7 @@
 ---
 dag_template: restartable_dag 
 dag_name: restartable_dag_elt
-schedule_interval: 0 0 0 * *
+schedule_interval: "None" 
 tasks:
 - task_id: preprocess
   task_type: airflow.operators.bash_operator.BashOperator
