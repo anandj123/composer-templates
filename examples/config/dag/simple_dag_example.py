@@ -27,7 +27,7 @@ with dag:
 
     bash_task_3 = airflow.operators.bash.BashOperator (
                             task_id = 'bash_task_3',
-                            bash_command = 'echo "hello 3"',
+                            bash_command = 'echo "hello 4"',
                             trigger_rule='none_failed')
 
     start >> bash_task_1 >> bash_task_2 >> bash_task_3
