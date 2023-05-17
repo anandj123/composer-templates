@@ -22,3 +22,4 @@ tasks:
                 "jar_file_uris": ["gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"],
             }}
   batch_id: batch-composer-simple-dag-test
+ 
