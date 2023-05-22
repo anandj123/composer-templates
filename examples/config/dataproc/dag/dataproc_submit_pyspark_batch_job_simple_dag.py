@@ -12,6 +12,7 @@ dag = DAG(
     start_date=airflow.utils.dates.days_ago(0)
 )
 
+
 with dag:
     start = DummyOperator( task_id='start')
 
